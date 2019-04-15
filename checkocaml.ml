@@ -208,17 +208,16 @@ let string_from_descr fd =
     | 0 -> String.concat ""  accu
     | n ->
         let str = if n < buffer_size then Bytes.sub str 0 n else str in
-        let str = Bytes.to_string str in
-        readfd (str :: accu) in
+        readfd ((Bytes.to_string str) :: accu) in
   readfd []
 ;;
 
 let descr_from_string str fd =
   let rec writefd offset left =
     if left > 0 then
-      let n = restart_on_EINTR (single_write fd str offset) left in
+      let n = restart_on_EINTR (single_write fd (Bytes.of_string str) offset) left in
       writefd (offset + n) (left - n) in
-  writefd 0 (Bytes.length str)
+  writefd 0 (String.length str)
 ;;
 
 let perm = 0o640;;
@@ -337,7 +336,7 @@ let execvp_redirect redirections cmd args  =
     | In_from_string s ->
         begin match temp_file with
           Some tmp ->
-            file_of_string ~file: tmp ~contents: (Bytes.of_string s);
+            file_of_string ~file: tmp ~contents: s;
             make_redirect (In_from_file tmp);
         | None -> assert false
         end
@@ -457,7 +456,7 @@ type ocaml_conf =
       ocamlmklib : string ;
       ocamlmktop : string ;
       ocamlprof : string ;
-      camlp4 : string;
+      camlp5 : string;
       ocamlfind : string ;
       version_string : string ;
       version : version ;
@@ -621,7 +620,7 @@ let ocaml_conf ?(withopt=false) ?(ocamlfind=false) () =
     ocamlmklib = ocaml_prog "ocamlmklib" ;
     ocamlmktop = ocaml_prog "ocamlmktop" ;
     ocamlprof = ocaml_prog "ocamlprof" ;
-    camlp4 = ocaml_prog "camlp4" ;
+    camlp5 = ocaml_prog "camlp5" ;
     ocamlfind = ocaml_prog ~err: ocamlfind "ocamlfind" ;
   } in
   check_conf_versions conf;
@@ -645,7 +644,7 @@ let print_conf c =
   !print (sp "library builder:            %s\n" c.ocamlmklib);
   !print (sp "toplevel builder:           %s\n" c.ocamlmktop);
   !print (sp "profiler:                   %s\n" c.ocamlprof);
-  !print (sp "camlp4:                     %s\n" c.camlp4);
+  !print (sp "camlp5:                     %s\n" c.camlp5);
   (match c.ocamlfind with "" -> () | s ->
     !print (sp "ocamlfind:                  %s\n" s))
 
@@ -847,10 +846,8 @@ let output_substs oc =
     (get_substs_list ())
 
 let output_substs_to_file file =
-  let contents =
-    (List.map (fun (var,v) -> Printf.sprintf "%s=\"%s\"" var v) (get_substs_list()))
-    |> String.concat "\n"
-    |> Bytes.of_string
+  let contents = String.concat "\n"
+      (List.map (fun (var,v) -> Printf.sprintf "%s=\"%s\"" var v) (get_substs_list()))
   in
   file_of_string ~file ~contents
 
@@ -867,7 +864,7 @@ let add_conf_variables c =
      "OCAMLMKLIB", c.ocamlmklib ;
      "OCAMLMKTOP", c.ocamlmktop ;
      "OCAMLPROF", c.ocamlprof ;
-     "CAMLP4", c.camlp4 ;
+     "CAMLP5", c.camlp5 ;
      "OCAMLFIND", c.ocamlfind ;
      "OCAMLBIN", Filename.dirname c.ocamlc;
      "OCAMLLIB", ocaml_libdir c ;
