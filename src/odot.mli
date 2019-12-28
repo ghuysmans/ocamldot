@@ -21,8 +21,6 @@
 (*    Contact: Maxence.Guesdon@inria.fr                                          *)
 (*********************************************************************************)
 
-(* $Id: odot.mli 134 2005-12-16 10:15:20Z zoggy $ *)
-
 (** Parsing and printing graphviz dot files. *)
 
 (** {2 Version} *)

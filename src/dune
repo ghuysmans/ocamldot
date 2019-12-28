@@ -1,0 +1,6 @@
+(ocamllex (modules lexer))
+(ocamlyacc (modules parser))
+(library
+ (name odot)
+ (public_name dot)
+ (libraries unix))

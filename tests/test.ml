@@ -21,8 +21,6 @@
 (*    Contact: Maxence.Guesdon@inria.fr                                          *)
 (*********************************************************************************)
 
-(* $Id: test.ml 120 2005-12-09 14:55:50Z zoggy $ *)
-
 let usage () =
   prerr_endline (Printf.sprintf "usage: %s <file>" Sys.argv.(0));
   exit 1

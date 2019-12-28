@@ -27,7 +27,7 @@
 
 let default_dot_ppi = 72.0
 
-let p_dbg s = ()
+let p_dbg = ignore
 
 (* let p_dbg = prerr_endline *)
 
@@ -266,7 +266,7 @@ class virtual box ?(dot_program=Dot) ~tmp_hash () =
          0 ->
            self#update_info ;
            self#zoom ()
-       | n -> GToolbox.message_box "Error"
+       | n -> GToolbox.message_box ~title:"Error"
            (Printf.sprintf "Exec error %d: %s" n com)
       );
 
@@ -297,7 +297,7 @@ class virtual box ?(dot_program=Dot) ~tmp_hash () =
         let y = float y in
         try
           let (x1,y1,x2,y2,id) = List.find
-            (fun (x1,y1,x2,y2,id) ->
+            (fun (x1,y1,x2,y2,_id) ->
                x1 *. ratio_x <= x && x <= x2 *. ratio_x &&
                  y1 *. ratio_y <= y && y <= y2 *. ratio_y
             )
@@ -317,7 +317,7 @@ class virtual box ?(dot_program=Dot) ~tmp_hash () =
       in
       self#on_button1_press ~x ~y id_opt
 
-    method on_button3_press x y =
+    method on_button3_press _x _y =
       let entries = List.map
         (fun z ->
            let t = Printf.sprintf "%d%%" z in
@@ -328,11 +328,11 @@ class virtual box ?(dot_program=Dot) ~tmp_hash () =
       GToolbox.popup_menu ~entries ~button: 3 ~time: Int32.zero
 
     initializer
-      ignore (vbox#connect#destroy (fun () -> self#clean_files));
+      ignore (vbox#connect#destroy ~callback:(fun () -> self#clean_files));
       wcombo#entry#set_editable false;
       wcombo#entry#set_text "100%";
-      ignore (wcombo#entry#connect#changed self#zoom );
-      ignore (wb_refresh#connect#clicked self#refresh);
+      ignore (wcombo#entry#connect#changed ~callback:self#zoom );
+      ignore (wb_refresh#connect#clicked ~callback:self#refresh);
       ignore
         (evt_box#event#connect#button_press ~callback:
          (fun evt ->
@@ -353,7 +353,7 @@ class virtual box ?(dot_program=Dot) ~tmp_hash () =
                    self#on_button3_press x y;
                    true
                   )
-            | n -> true
+            | _n -> true
          )
         );
       if not (Sys.file_exists annot_dot_file) then

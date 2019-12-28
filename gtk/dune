@@ -1,0 +1,4 @@
+(library
+ (name odot_gtk)
+ (public_name dot.gtk)
+ (libraries dot lablgtk2))

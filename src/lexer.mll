@@ -22,11 +22,10 @@
 (*********************************************************************************)
 
 {
-(* $Id: odot_lexer.mll 133 2005-12-16 10:03:56Z zoggy $ *)
-open Odot_parser
+open Parser
 
 
-let print_DEBUG s = () (*prerr_endline*)
+let print_DEBUG = ignore (*prerr_endline*)
 
 let line = ref 0
 

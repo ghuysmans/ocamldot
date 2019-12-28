@@ -21,53 +21,49 @@
 (*    Contact: Maxence.Guesdon@inria.fr                                          *)
 (*********************************************************************************)
 
-(* $Id: odot.ml 134 2005-12-16 10:15:20Z zoggy $ *)
+let version = Version.version
 
-open Odot_types
-
-let version = Odot_version.version
-
-type graph_kind = Odot_types.graph_kind =
+type graph_kind = Types.graph_kind =
     Graph | Digraph
 
-type id = Odot_types.id =
+type id = Types.id =
     Simple_id of string
   | Html_id of string
   | Double_quoted_id of string
 
 type attr = id * id option
 
-type compass_pt = Odot_types.compass_pt =
+type compass_pt = Types.compass_pt =
     N | NE | E | SE | S | SW | W | NW
 
 type port = id * compass_pt option
 
 type node_id = id * port option
 
-type edge_stmt_point = Odot_types.edge_stmt_point =
+type edge_stmt_point = Types.edge_stmt_point =
     Edge_node_id of node_id
   | Edge_subgraph of subgraph
 
 and edge_stmt = edge_stmt_point * edge_stmt_point list * attr list
 
-and attr_stmt = Odot_types.attr_stmt =
+and attr_stmt = Types.attr_stmt =
     Attr_graph of attr list
   | Attr_node of attr list
   | Attr_edge of attr list
 
-and stmt = Odot_types.stmt =
+and stmt = Types.stmt =
   | Stmt_node of node_id * attr list
   | Stmt_equals of id * id
   | Stmt_edge of edge_stmt
   | Stmt_attr of attr_stmt
   | Stmt_subgraph of subgraph
 
-and subgraph = Odot_types.subgraph =
+and subgraph = Types.subgraph =
     { mutable sub_id : id option ;
       mutable sub_stmt_list : stmt list ;
     }
 
-and graph = Odot_types.graph =
+and graph = Types.graph =
     {
       mutable strict : bool ;
       mutable kind : graph_kind ;
@@ -78,12 +74,12 @@ and graph = Odot_types.graph =
 exception Parse_error of int * int
 
 let parse lexbuf =
-  Odot_lexer.line := 0;
-  try Odot_parser.graph Odot_lexer.main lexbuf
+  Lexer.line := 0;
+  try Parser.graph Lexer.main lexbuf
   with Parsing.Parse_error ->
     let p = lexbuf.Lexing.lex_curr_p in
     raise
-      (Parse_error (!Odot_lexer.line,
+      (Parse_error (!Lexer.line,
                     p.Lexing.pos_bol)
       )
 

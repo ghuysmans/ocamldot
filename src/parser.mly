@@ -22,7 +22,7 @@
 /*********************************************************************************/
 
 %{
-open Odot_types
+open Types
 
 let compass_pt_of_id id =
   let s =
@@ -61,7 +61,7 @@ let compass_pt_of_id id =
 %token PLUS
 %token EDGEOP
 %token EOF
-%type <Odot_types.graph> graph
+%type <Types.graph> graph
 %start graph
 %%
 a_list:
