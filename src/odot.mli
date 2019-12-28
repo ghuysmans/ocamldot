@@ -23,11 +23,6 @@
 
 (** Parsing and printing graphviz dot files. *)
 
-(** {2 Version} *)
-
-(** Version of the library. *)
-val version : string
-
 (** {2 Representation of dot graphs} *)
 
 type graph_kind = Graph | Digraph

@@ -21,8 +21,6 @@
 (*    Contact: Maxence.Guesdon@inria.fr                                          *)
 (*********************************************************************************)
 
-let version = Version.version
-
 type graph_kind = Types.graph_kind =
     Graph | Digraph
 
