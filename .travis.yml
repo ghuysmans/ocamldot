@@ -4,7 +4,8 @@ install: wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.t
 script: bash -ex .travis-opam.sh
 env:
   global:
-    - PACKAGE=dot
+    - PACKAGE=dot_gtk
+    - PINS=dot.dev:.
   matrix:
     - OCAML_VERSION=4.07
     - OCAML_VERSION=4.08
